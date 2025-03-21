@@ -270,6 +270,13 @@ pub enum AuthType {
     #[ruma_enum(rename = "m.login.terms")]
     Terms,
 
+    /// This experimental and will likely be renamed
+    ///
+    /// This provides a means of using an external authentication service
+    /// such as MAS to handle authentication through OAuth2.0 + OpenID Connect (OIDC)
+    #[cfg(feature = "unstable-msc3861")]
+    #[ruma_enum(rename = "org.matrix.msc3861.authentication")]
+    MSC3861,
     #[doc(hidden)]
     _Custom(PrivOwnedStr),
 }

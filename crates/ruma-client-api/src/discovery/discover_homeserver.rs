@@ -52,7 +52,13 @@ pub struct Response {
         skip_serializing_if = "Option::is_none"
     )]
     pub authentication: Option<AuthenticationServerInfo>,
-
+    #[cfg(feature = "unstable-msc3861")]
+    #[serde(
+        rename = "org.matrix.msc3861.authentication",
+        alias = "m.authentication.delegated",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub delegated_authentication: Option<MASServerInfo>,
     /// Information about the homeserver's trusted proxy to use for sliding sync development.
     #[cfg(feature = "unstable-msc3575")]
     #[serde(rename = "org.matrix.msc3575.proxy", skip_serializing_if = "Option::is_none")]
@@ -128,6 +134,23 @@ impl TileServerInfo {
     /// Creates a `TileServerInfo` with the given map style URL.
     pub fn new(map_style_url: String) -> Self {
         Self { map_style_url }
+    }
+}
+
+/// Information about a discovered authentication server.
+#[cfg(feature = "unstable-msc3861")]
+#[derive(Clone, Debug, Deserialize, Hash, Serialize)]
+#[cfg_attr(not(ruma_unstable_exhaustive_types), non_exhaustive)]
+pub struct MASServerInfo {
+    /// The OIDC Provider that is trusted by the homeserver.
+    pub base_url: String,
+}
+
+#[cfg(feature = "unstable-msc2965")]
+impl MASServerInfo {
+    /// Creates an `MASServerInfo` with the given `base_url`
+    pub fn new(base_url: String) -> Self {
+        Self { base_url }
     }
 }
 
